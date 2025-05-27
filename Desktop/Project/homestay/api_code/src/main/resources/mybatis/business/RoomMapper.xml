@@ -1,0 +1,59 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.homestay.project.business.mapper.RoomMapper">
+    
+    <resultMap type="com.homestay.project.business.domain.Room" id="BusinessRoomResult">
+        <result property="id"    column="id"    />
+        <result property="hotelId"    column="hotel_id"    />
+        <result property="roomName"    column="room_name"    />
+        <result property="roomNumber"    column="room_number"    />
+        <result property="mainImg"    column="main_img"    />
+        <result property="price"    column="price"    />
+        <result property="area"    column="area"    />
+        <result property="occupancy"    column="occupancy"    />
+        <result property="bedType"    column="bed_type"    />
+        <result property="floor"    column="floor"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="isDelete"    column="is_delete"    />
+    </resultMap>
+
+    <sql id="selectBusinessRoomVo">
+        select id, hotel_id, room_name, room_number, main_img, price, area, occupancy, bed_type, floor, remark, create_time, create_by, update_time, update_by, is_delete from business_room
+    </sql>
+
+    <delete id="deleteRoomByIds" parameterType="String">
+        delete from business_room where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+
+
+    <select id="getViewRoomList" parameterType="com.homestay.project.business.vo.RoomVO" resultType="com.homestay.project.business.vo.RoomVO">
+        SELECT a.*,b.user_id,b.is_order,b.time_number,b.view_duration FROM business_room a
+        JOIN business_user_view b ON a.id=b.room_id
+        <where>
+            AND a.is_delete = 0
+        </where>
+    </select>
+
+    <select id="getRoomList" parameterType="com.homestay.project.business.vo.RoomVO" resultType="com.homestay.project.business.vo.RoomVO">
+        SELECT * FROM business_room
+        <where>
+            AND is_delete = 0
+            <if test="searchText != null  and searchText != ''">
+                and (room_name like concat('%', #{searchText}, '%') or hotel_name like concat('%', #{searchText}, '%'))
+           </if>
+            <if test="hotelId != null  and hotelId != ''">
+                and hotel_id=#{hotelId}
+            </if>
+        </where>
+    </select>
+
+</mapper>

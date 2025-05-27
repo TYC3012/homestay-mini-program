@@ -1,0 +1,111 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.homestay.project.business.mapper.HotelMapper">
+    
+    <resultMap type="com.homestay.project.business.domain.Hotel" id="HotelResult">
+        <result property="id"    column="id"    />
+        <result property="bossId"    column="boss_id"    />
+        <result property="homeName"    column="home_name"    />
+        <result property="homeFile"    column="home_file"    />
+        <result property="province"    column="province"    />
+        <result property="city"    column="city"    />
+        <result property="address"    column="address"    />
+        <result property="asTrade"    column="as_trade"    />
+        <result property="remark"    column="remark"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="isDelete"    column="is_delete"    />
+    </resultMap>
+
+    <sql id="selectHotelVo">
+        select id, boss_id, home_name, home_file, province, city, address, as_trade, remark, create_time, create_by, update_time, update_by, is_delete from business_hotel
+    </sql>
+
+    <select id="selectHotelList" parameterType="com.homestay.project.business.domain.Hotel" resultMap="HotelResult">
+        <include refid="selectHotelVo"/>
+        <where>  
+            <if test="bossId != null "> and boss_id = #{bossId}</if>
+            <if test="homeName != null  and homeName != ''"> and home_name like concat('%', #{homeName}, '%')</if>
+            <if test="homeFile != null  and homeFile != ''"> and home_file = #{homeFile}</if>
+            <if test="province != null  and province != ''"> and province = #{province}</if>
+            <if test="city != null  and city != ''"> and city = #{city}</if>
+            <if test="address != null  and address != ''"> and address = #{address}</if>
+            <if test="asTrade != null "> and as_trade = #{asTrade}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+    
+    <select id="selectHotelById" parameterType="Long" resultMap="HotelResult">
+        <include refid="selectHotelVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertHotel" parameterType="com.homestay.project.business.domain.Hotel" useGeneratedKeys="true" keyProperty="id">
+        insert into business_hotel
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="bossId != null">boss_id,</if>
+            <if test="homeName != null">home_name,</if>
+            <if test="homeFile != null">home_file,</if>
+            <if test="province != null">province,</if>
+            <if test="city != null">city,</if>
+            <if test="address != null">address,</if>
+            <if test="asTrade != null">as_trade,</if>
+            <if test="remark != null">remark,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="isDelete != null">is_delete,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="bossId != null">#{bossId},</if>
+            <if test="homeName != null">#{homeName},</if>
+            <if test="homeFile != null">#{homeFile},</if>
+            <if test="province != null">#{province},</if>
+            <if test="city != null">#{city},</if>
+            <if test="address != null">#{address},</if>
+            <if test="asTrade != null">#{asTrade},</if>
+            <if test="remark != null">#{remark},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+         </trim>
+    </insert>
+
+    <update id="updateHotel" parameterType="com.homestay.project.business.domain.Hotel">
+        update business_hotel
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="bossId != null">boss_id = #{bossId},</if>
+            <if test="homeName != null">home_name = #{homeName},</if>
+            <if test="homeFile != null">home_file = #{homeFile},</if>
+            <if test="province != null">province = #{province},</if>
+            <if test="city != null">city = #{city},</if>
+            <if test="address != null">address = #{address},</if>
+            <if test="asTrade != null">as_trade = #{asTrade},</if>
+            <if test="remark != null">remark = #{remark},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteHotelById" parameterType="Long">
+        delete from business_hotel where id = #{id}
+    </delete>
+
+    <delete id="deleteHotelByIds" parameterType="String">
+        delete from business_hotel where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
