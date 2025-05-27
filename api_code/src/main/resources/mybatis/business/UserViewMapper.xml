@@ -1,0 +1,106 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+"http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.homestay.project.business.mapper.UserViewMapper">
+    
+    <resultMap type="com.homestay.project.business.domain.UserView" id="BusinessUserViewResult">
+        <result property="id"    column="id"    />
+        <result property="userId"    column="user_id"    />
+        <result property="userName"    column="user_name"    />
+        <result property="roomId"    column="room_id"    />
+        <result property="roomName"    column="room_name"    />
+        <result property="isOrder"    column="is_order"    />
+        <result property="viewTime"    column="view_time"    />
+        <result property="viewDuration"    column="view_duration"    />
+        <result property="createTime"    column="create_time"    />
+        <result property="createBy"    column="create_by"    />
+        <result property="updateTime"    column="update_time"    />
+        <result property="updateBy"    column="update_by"    />
+        <result property="isDelete"    column="is_delete"    />
+    </resultMap>
+
+    <sql id="selectBusinessUserViewVo">
+        select id, user_id, user_name, room_id, room_name, is_order, view_time, view_duration, create_time, create_by, update_time, update_by, is_delete from business_user_view
+    </sql>
+
+    <select id="selectBusinessUserViewList" parameterType="com.homestay.project.business.domain.UserView" resultMap="BusinessUserViewResult">
+        <include refid="selectBusinessUserViewVo"/>
+        <where>  
+            <if test="userId != null "> and user_id = #{userId}</if>
+            <if test="userName != null  and userName != ''"> and user_name like concat('%', #{userName}, '%')</if>
+            <if test="roomName != null  and roomName != ''"> and room_name like concat('%', #{roomName}, '%')</if>
+            <if test="isOrder != null "> and is_order = #{isOrder}</if>
+            <if test="viewTime != null "> and view_time = #{viewTime}</if>
+            <if test="viewDuration != null "> and view_duration = #{viewDuration}</if>
+            <if test="isDelete != null "> and is_delete = #{isDelete}</if>
+        </where>
+    </select>
+    
+    <select id="selectBusinessUserViewById" parameterType="Long" resultMap="BusinessUserViewResult">
+        <include refid="selectBusinessUserViewVo"/>
+        where id = #{id}
+    </select>
+        
+    <insert id="insertBusinessUserView" parameterType="com.homestay.project.business.domain.UserView" useGeneratedKeys="true" keyProperty="id">
+        insert into business_user_view
+        <trim prefix="(" suffix=")" suffixOverrides=",">
+            <if test="userId != null">user_id,</if>
+            <if test="userName != null">user_name,</if>
+            <if test="roomId != null">room_id,</if>
+            <if test="roomName != null">room_name,</if>
+            <if test="isOrder != null">is_order,</if>
+            <if test="viewTime != null">view_time,</if>
+            <if test="viewDuration != null">view_duration,</if>
+            <if test="createTime != null">create_time,</if>
+            <if test="createBy != null">create_by,</if>
+            <if test="updateTime != null">update_time,</if>
+            <if test="updateBy != null">update_by,</if>
+            <if test="isDelete != null">is_delete,</if>
+         </trim>
+        <trim prefix="values (" suffix=")" suffixOverrides=",">
+            <if test="userId != null">#{userId},</if>
+            <if test="userName != null">#{userName},</if>
+            <if test="roomId != null">#{roomId},</if>
+            <if test="roomName != null">#{roomName},</if>
+            <if test="isOrder != null">#{isOrder},</if>
+            <if test="viewTime != null">#{viewTime},</if>
+            <if test="viewDuration != null">#{viewDuration},</if>
+            <if test="createTime != null">#{createTime},</if>
+            <if test="createBy != null">#{createBy},</if>
+            <if test="updateTime != null">#{updateTime},</if>
+            <if test="updateBy != null">#{updateBy},</if>
+            <if test="isDelete != null">#{isDelete},</if>
+         </trim>
+    </insert>
+
+    <update id="updateBusinessUserView" parameterType="com.homestay.project.business.domain.UserView">
+        update business_user_view
+        <trim prefix="SET" suffixOverrides=",">
+            <if test="userId != null">user_id = #{userId},</if>
+            <if test="userName != null">user_name = #{userName},</if>
+            <if test="roomId != null">room_id = #{roomId},</if>
+            <if test="roomName != null">room_name = #{roomName},</if>
+            <if test="isOrder != null">is_order = #{isOrder},</if>
+            <if test="viewTime != null">view_time = #{viewTime},</if>
+            <if test="viewDuration != null">view_duration = #{viewDuration},</if>
+            <if test="createTime != null">create_time = #{createTime},</if>
+            <if test="createBy != null">create_by = #{createBy},</if>
+            <if test="updateTime != null">update_time = #{updateTime},</if>
+            <if test="updateBy != null">update_by = #{updateBy},</if>
+            <if test="isDelete != null">is_delete = #{isDelete},</if>
+        </trim>
+        where id = #{id}
+    </update>
+
+    <delete id="deleteBusinessUserViewById" parameterType="Long">
+        delete from business_user_view where id = #{id}
+    </delete>
+
+    <delete id="deleteBusinessUserViewByIds" parameterType="String">
+        delete from business_user_view where id in 
+        <foreach item="id" collection="array" open="(" separator="," close=")">
+            #{id}
+        </foreach>
+    </delete>
+</mapper>
